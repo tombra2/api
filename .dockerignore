@@ -1,0 +1,14 @@
+var/
+vendor/
+.env.local
+.env.test.local
+.editorconfig
+.git/
+.ddev/
+tests/
+.php-cs-fixer.dist.php
+phpstan-baseline.neon
+phpstan.neon.dist
+.phpunit.cache/
+.gitignore
+phpunit.dist.xml
