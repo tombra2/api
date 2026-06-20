@@ -1,0 +1,62 @@
+services:
+  php:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    depends_on:
+      database:
+        condition: service_healthy
+    environment:
+      DATABASE_URL: "mysql://${MARIADB_USER}:${MARIADB_PASSWORD}@database:3306/${MARIADB_DATABASE}?serverVersion=11.8.0-mariadb&charset=utf8mb4"
+      APP_SECRET: ${APP_SECRET}
+
+  web:
+    image: nginx:stable-alpine
+    volumes:
+        - ./docker/nginx/default.conf:/etc/nginx/conf.d/default.conf:ro
+    restart: unless-stopped
+    depends_on:
+      - php
+    environment:
+      - SERVICE_FQDN_WEB_80
+
+  database:
+    image: mariadb:11.8
+    restart: unless-stopped
+    volumes:
+      - db_data:/var/lib/mysql
+    environment:
+        MARIADB_DATABASE: ${MARIADB_DATABASE}
+        MARIADB_USER: ${MARIADB_USER}
+        MARIADB_PASSWORD: ${MARIADB_PASSWORD}
+        MARIADB_ROOT_PASSWORD: ${MARIADB_ROOT_PASSWORD}
+    healthcheck:
+      test: ["CMD","healthcheck.sh","--connect","--innodb_initialized"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+
+  phpmyadmin:
+    image: phpmyadmin
+    restart: unless-stopped
+    environment:
+      - PMA_HOST=database
+      - PMA_PORT=3306
+      - SERVICE_FQDN_PHPMYADMIN_80
+    depends_on:
+      - database
+  uptime-kuma:
+    image: louislam/uptime-kuma:1
+    restart: unless-stopped
+    volumes:
+      - uptime-kuma:/app/data
+    environment:
+      - SERVICE_FQDN_UPTIMEKUMA_3001
+
+volumes:
+  db_data:
+  uptime-kuma:
+
+

@@ -1,14 +1,38 @@
-var/
+# Dependencies & Laufzeit-Artefakte (werden im Image frisch erzeugt)
 vendor/
-.env.local
-.env.test.local
-.editorconfig
+var/
+
+# Versionskontrolle & Docker-Dateien (gehören nicht ins Image)
 .git/
-.ddev/
-tests/
-.php-cs-fixer.dist.php
-phpstan-baseline.neon
-phpstan.neon.dist
-.phpunit.cache/
 .gitignore
+.dockerignore
+Dockerfile
+compose.yaml
+compose.override.yaml
+docker-compose.override.yaml
+
+# Lokale Dev-Umgebung
+.ddev/
+.editorconfig
+
+# Secrets & lokale/Test-Env-Dateien (Prod-Werte kommen aus Coolify)
+.env.local
+.env.*.local
+.env.test
+
+# Tests
+tests/
 phpunit.dist.xml
+.phpunit.cache/
+
+# Statische Analyse & Code-Style
+phpstan.neon.dist
+phpstan-baseline.neon
+.php-cs-fixer.dist.php
+
+# IDE & OS
+.idea/
+.vscode/
+*.iml
+.DS_Store
+Thumbs.db
