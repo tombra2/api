@@ -1,0 +1,32 @@
+includes:
+	- phpstan-baseline.neon
+	- vendor/phpstan/phpstan-doctrine/extension.neon
+	- vendor/spaze/phpstan-disallowed-calls/extension.neon
+	- vendor/spaze/phpstan-disallowed-calls/disallowed-dangerous-calls.neon
+	- vendor/spaze/phpstan-disallowed-calls/disallowed-execution-calls.neon
+
+parameters:
+	level: 7
+	# included paths
+	paths:
+		- src
+		- tests
+	disallowedFunctionCalls:
+	    -
+	        function: 'die()'
+	        message: 'Do not use die/exit, use proper responses. die() is not testable!'
+	    -
+	        function: 'exit()'
+	        message: 'Do not use die/exit, use proper responses. die() is not testable!'
+	    -
+	        function: 'r()'
+	        message: 'Please remove debug statements before committing'
+	    -
+	        function: 'rt()'
+	        message: 'Please remove debug statements before committing'
+	    -
+	        function: 'dd()'
+	        message: 'Please remove debug statements before committing'
+	    -
+	        function: 'dump()'
+	        message: 'Please remove debug statements before committing'
